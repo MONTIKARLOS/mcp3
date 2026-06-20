@@ -133,3 +133,41 @@ The server communicates over **stdio**. It waits for MCP protocol messages on st
 ```
 
 Restart Claude Desktop after saving the config. You should see **web-integration** listed under MCP servers with all four tools available.
+
+## Configuration
+
+Settings are loaded from `.env` via `python-dotenv`.
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `DEFAULT_TIMEOUT` | `15` | HTTP request timeout (seconds) |
+| `USER_AGENT` | `MCP-WebIntegration/1.0 ...` | User-Agent header on all requests |
+| `OPENWEATHER_API_KEY` | _(empty)_ | Optional; reserved for future use |
+| `DUCKDUCKGO_API_KEY` | _(empty)_ | Optional; reserved for future use |
+
+### Example `.env`
+
+```env
+DEFAULT_TIMEOUT=15
+USER_AGENT=MCP-WebIntegration/1.0 (+https://github.com/modelcontextprotocol)
+OPENWEATHER_API_KEY=
+DUCKDUCKGO_API_KEY=
+```
+
+## Project structure
+
+```
+mcp-server/
+├── main.py              # Entry point
+├── server.py            # MCP server setup (@list_tools, @call_tool)
+├── config.py            # Environment configuration
+├── tools/
+│   ├── __init__.py
+│   └── api_tools.py     # Tool definitions and handlers
+├── utils/
+│   ├── __init__.py
+│   └── http_client.py   # Shared async httpx client
+├── requirements.txt
+├── .env.example
+└── README.md
+```
