@@ -171,3 +171,39 @@ mcp-server/
 ├── .env.example
 └── README.md
 ```
+
+## Architecture
+
+```
+Claude Desktop
+      │
+      │  stdio (JSON-RPC)
+      ▼
+   main.py ──► server.py ──► tools/api_tools.py
+                                    │
+                                    ▼
+                           utils/http_client.py
+                                    │
+                                    ▼
+                              External APIs
+                         (httpbin, DuckDuckGo, Open-Meteo)
+```
+
+## Error handling
+
+- Every tool is wrapped in try/except — errors never crash the server
+- Errors are returned as MCP text content with a clear message
+- Errors are logged to **stderr** (stdout is reserved for MCP protocol)
+- HTTP connection failures are retried once automatically
+
+## Dependencies
+
+```
+mcp[cli]>=1.0.0
+httpx>=0.27.0
+python-dotenv>=1.0.0
+```
+
+## License
+
+MIT
