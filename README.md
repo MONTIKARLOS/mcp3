@@ -29,3 +29,20 @@ python main.py
 ```
 
 The server runs over **stdio** and is meant to be launched by an MCP host (e.g. Claude Desktop), not used interactively in a terminal.
+
+## Claude Desktop
+
+Add to `%APPDATA%\Claude\claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "web-integration": {
+      "command": "C:\\Users\\suraj\\OneDrive\\Desktop\\mcp2\\mcp-server\\.venv\\Scripts\\python.exe",
+      "args": ["C:\\Users\\suraj\\OneDrive\\Desktop\\mcp2\\mcp-server\\main.py"]
+    }
+  }
+}
+```
+
+Restart Claude Desktop after saving.
