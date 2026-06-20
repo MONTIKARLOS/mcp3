@@ -96,3 +96,40 @@ python main.py
 ```
 
 The server communicates over **stdio**. It waits for MCP protocol messages on stdin and responds on stdout — do not print to stdout manually. Logs go to stderr.
+
+## Claude Desktop integration
+
+### Config file location
+
+| OS | Path |
+|----|------|
+| Windows | `%APPDATA%\Claude\claude_desktop_config.json` |
+| macOS | `~/Library/Application Support/Claude/claude_desktop_config.json` |
+
+### Windows config (this machine)
+
+```json
+{
+  "mcpServers": {
+    "web-integration": {
+      "command": "C:\\Users\\suraj\\OneDrive\\Desktop\\mcp2\\mcp-server\\.venv\\Scripts\\python.exe",
+      "args": ["C:\\Users\\suraj\\OneDrive\\Desktop\\mcp2\\mcp-server\\main.py"]
+    }
+  }
+}
+```
+
+### Generic config (replace paths)
+
+```json
+{
+  "mcpServers": {
+    "web-integration": {
+      "command": "python",
+      "args": ["/absolute/path/to/mcp-server/main.py"]
+    }
+  }
+}
+```
+
+Restart Claude Desktop after saving the config. You should see **web-integration** listed under MCP servers with all four tools available.
