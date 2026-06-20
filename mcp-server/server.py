@@ -44,3 +44,14 @@ async def handle_call_tool(
         message = f"Unhandled error in tool '{name}': {exc}"
         logger.exception(message)
         return [types.TextContent(type="text", text=f"Error: {message}")]
+
+
+async def run_server() -> None:
+    """Start the MCP server over stdio transport."""
+    async with stdio_server() as (read_stream, write_stream):
+        await server.run(
+            read_stream,
+            write_stream,
+            server.create_initialization_options(),
+        )
+    await close_client()
