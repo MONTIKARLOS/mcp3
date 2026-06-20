@@ -47,3 +47,52 @@ Fetch current weather for a location (free, no API key).
 **Example prompt:** _"What's the weather at latitude 40.71, longitude -74.01?"_
 
 ---
+
+## Requirements
+
+- Python 3.11+
+- pip
+
+## Setup
+
+### 1. Enter the server directory
+
+```powershell
+cd C:\Users\suraj\OneDrive\Desktop\mcp2\mcp-server
+```
+
+### 2. Create a virtual environment
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+```
+
+On macOS/Linux:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
+
+### 3. Install dependencies
+
+```powershell
+pip install -r requirements.txt
+```
+
+### 4. Configure environment (optional)
+
+```powershell
+copy .env.example .env
+```
+
+Edit `.env` if you want to change the timeout or User-Agent.
+
+## Run
+
+```powershell
+python main.py
+```
+
+The server communicates over **stdio**. It waits for MCP protocol messages on stdin and responds on stdout — do not print to stdout manually. Logs go to stderr.
