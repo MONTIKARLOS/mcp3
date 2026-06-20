@@ -126,3 +126,45 @@ def get_tool_definitions() -> list[types.Tool]:
             },
         ),
     ]
+
+
+async def fetch_url(url: str, headers: dict[str, str] | None = None) -> str:
+    """GET a URL and return status, body, and content type as JSON."""
+    response = await request_with_retry("GET", url, headers=headers)
+    content_type = response.headers.get("content-type", "")
+    try:
+        body = response.text
+    except Exception:
+        body = "<binary or undecodable response>"
+
+    result = {
+        "status": response.status_code,
+        "body": body,
+        "content_type": content_type,
+    }
+    return json.dumps(result, indent=2)
+
+
+async def post_json(
+    url: str,
+    payload: dict[str, Any],
+    headers: dict[str, str] | None = None,
+) -> str:
+    """POST JSON to a URL and return status and response body as JSON."""
+    merged_headers = {"Content-Type": "application/json", **(headers or {})}
+    response = await request_with_retry(
+        "POST",
+        url,
+        headers=merged_headers,
+        json=payload,
+    )
+    try:
+        response_body: Any = response.json()
+    except json.JSONDecodeError:
+        response_body = response.text
+
+    result = {
+        "status": response.status_code,
+        "response_body": response_body,
+    }
+    return json.dumps(result, indent=2, default=str)
