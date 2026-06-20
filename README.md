@@ -46,3 +46,14 @@ Add to `%APPDATA%\Claude\claude_desktop_config.json`:
 ```
 
 Restart Claude Desktop after saving.
+
+## Full documentation
+
+See [`mcp-server/README.md`](mcp-server/README.md) for setup, configuration, project structure, and error handling details.
+
+## Stack
+
+- Python 3.11+
+- [mcp](https://github.com/modelcontextprotocol/python-sdk) (official MCP SDK)
+- httpx (async HTTP)
+- python-dotenv (environment config)
