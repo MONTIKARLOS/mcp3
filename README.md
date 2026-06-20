@@ -16,3 +16,16 @@ A Python [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server
 | `post_json` | HTTP POST JSON to any URL |
 | `search_web` | Search via DuckDuckGo Instant Answer API |
 | `get_weather` | Current weather from Open-Meteo (no API key) |
+
+## Quick start
+
+```powershell
+cd mcp-server
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+copy .env.example .env
+python main.py
+```
+
+The server runs over **stdio** and is meant to be launched by an MCP host (e.g. Claude Desktop), not used interactively in a terminal.
