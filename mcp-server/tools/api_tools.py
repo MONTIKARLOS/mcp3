@@ -264,3 +264,38 @@ async def get_weather(latitude: float, longitude: float) -> str:
         "observation_time": current.get("time"),
     }
     return json.dumps(result, indent=2)
+
+
+_TOOL_HANDLERS: dict[str, Any] = {
+    "fetch_url": fetch_url,
+    "post_json": post_json,
+    "search_web": search_web,
+    "get_weather": get_weather,
+}
+
+TOOL_NAMES: frozenset[str] = frozenset(_TOOL_HANDLERS.keys())
+
+
+async def execute_tool(name: str, arguments: dict[str, Any] | None) -> str:
+    """
+    Dispatch a tool call by name.
+
+    Raises KeyError for unknown tools. Individual tool errors are caught,
+    logged, and returned as human-readable error strings.
+    """
+    if name not in _TOOL_HANDLERS:
+        raise KeyError(f"Unknown tool: {name}")
+
+    args = arguments or {}
+    handler = _TOOL_HANDLERS[name]
+
+    try:
+        return await handler(**args)
+    except TypeError as exc:
+        message = f"Invalid arguments for tool '{name}': {exc}"
+        logger.exception(message)
+        return f"Error: {message}"
+    except Exception as exc:
+        message = f"Tool '{name}' failed: {exc}"
+        logger.exception(message)
+        return f"Error: {message}"
