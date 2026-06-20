@@ -168,3 +168,99 @@ async def post_json(
         "response_body": response_body,
     }
     return json.dumps(result, indent=2, default=str)
+
+
+def _format_related_topics(topics: list[Any], limit: int = 5) -> list[str]:
+    """Extract text summaries from DuckDuckGo related topics."""
+    lines: list[str] = []
+    for topic in topics:
+        if len(lines) >= limit:
+            break
+        if isinstance(topic, dict):
+            if "Text" in topic:
+                text = str(topic["Text"]).strip()
+                url = topic.get("FirstURL", "")
+                if text:
+                    lines.append(f"- {text}" + (f" ({url})" if url else ""))
+            elif "Topics" in topic:
+                for sub in topic.get("Topics", []):
+                    if len(lines) >= limit:
+                        break
+                    if isinstance(sub, dict) and sub.get("Text"):
+                        text = str(sub["Text"]).strip()
+                        url = sub.get("FirstURL", "")
+                        lines.append(f"- {text}" + (f" ({url})" if url else ""))
+    return lines
+
+
+async def search_web(query: str) -> str:
+    """Query DuckDuckGo Instant Answer API and return a text summary."""
+    from urllib.parse import urlencode
+
+    params = {
+        "q": query,
+        "format": "json",
+        "no_html": "1",
+        "skip_disambig": "1",
+    }
+    url = f"https://api.duckduckgo.com/?{urlencode(params)}"
+
+    response = await request_with_retry("GET", url)
+    response.raise_for_status()
+    data = response.json()
+
+    parts: list[str] = []
+
+    heading = data.get("Heading")
+    if heading:
+        parts.append(f"Topic: {heading}")
+
+    if data.get("Answer"):
+        parts.append(f"Instant answer: {data['Answer']}")
+
+    abstract = data.get("AbstractText", "").strip()
+    if abstract:
+        source = data.get("AbstractSource", "")
+        url_ref = data.get("AbstractURL", "")
+        parts.append(f"Summary: {abstract}")
+        if source or url_ref:
+            parts.append(f"Source: {source} {url_ref}".strip())
+
+    related = _format_related_topics(data.get("RelatedTopics", []))
+    if related:
+        parts.append("Related results:")
+        parts.extend(related)
+
+    if not parts:
+        return f"No instant answer or related topics found for query: {query!r}"
+
+    return "\n".join(parts)
+
+
+async def get_weather(latitude: float, longitude: float) -> str:
+    """Fetch current weather from Open-Meteo for the given coordinates."""
+    url = (
+        "https://api.open-meteo.com/v1/forecast"
+        f"?latitude={latitude}&longitude={longitude}"
+        "&current=temperature_2m,wind_speed_10m,weather_code"
+        "&wind_speed_unit=kmh"
+    )
+
+    response = await request_with_retry("GET", url)
+    response.raise_for_status()
+    data = response.json()
+
+    current = data.get("current", {})
+    weather_code = int(current.get("weather_code", -1))
+    description = _WMO_WEATHER_CODES.get(weather_code, f"Code {weather_code}")
+
+    result = {
+        "latitude": latitude,
+        "longitude": longitude,
+        "temperature_c": current.get("temperature_2m"),
+        "wind_speed_kmh": current.get("wind_speed_10m"),
+        "weather_code": weather_code,
+        "weather_description": description,
+        "observation_time": current.get("time"),
+    }
+    return json.dumps(result, indent=2)
