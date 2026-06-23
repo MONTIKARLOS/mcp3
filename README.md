@@ -19,7 +19,7 @@ A Python [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server
 
 ## Quick start
 
-```powershell
+```powershell  
 cd mcp-server
 python -m venv .venv
 .venv\Scripts\Activate.ps1
