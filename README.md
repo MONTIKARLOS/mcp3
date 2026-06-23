@@ -17,7 +17,7 @@ A Python [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server
 | `search_web` | Search via DuckDuckGo Instant Answer API |
 | `get_weather` | Current weather from Open-Meteo (no API key) |
 
-## Quick start
+## Quick start  
 
 ```powershell  
 cd mcp-server
