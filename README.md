@@ -10,7 +10,7 @@ A Python [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server
 
 ## Tools
 
-| Tool | What it does | 
+| Tool | What it does |   
 |------|----------------|
 | `fetch_url` | HTTP GET any URL |
 | `post_json` | HTTP POST JSON to any URL |
