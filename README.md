@@ -9,7 +9,7 @@ A Python [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server
 | [`mcp-server/`](mcp-server/) | The MCP server — run this with Claude Desktop or any MCP host |
 
 ## Tools
-
+ 
 | Tool | What it does |
 |------|----------------|
 | `fetch_url` | HTTP GET any URL |
