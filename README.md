@@ -34,7 +34,7 @@ The server runs over **stdio** and is meant to be launched by an MCP host (e.g. 
 
 Add to `%APPDATA%\Claude\claude_desktop_config.json`:
 
-```json
+```json 
 {
   "mcpServers": {
     "web-integration": {
